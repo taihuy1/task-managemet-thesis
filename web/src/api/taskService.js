@@ -1,25 +1,48 @@
-
 import axiosClient from './axiosClient';
 
 const taskService = {
-
-  login: (username, password) => {
+  login: function(username, password) {
     return axiosClient.post('/auth/login', { username, password });
   },
-  logout: () => {
+
+  logout: function() {
     return axiosClient.post('/auth/logout');
   },
-  
 
-  getAllTasks: () => {
+  getAllTasks: function() {
     return axiosClient.get('/task/');
   },
 
-  startTask: (taskId) => {
-    return axiosClient.post('/request/rely/start', { taskId });
+  getTaskById: function(taskId) {
+    return axiosClient.get('/task/' + taskId);
   },
-  completeTask: (taskId, result) => {
-    return axiosClient.post('/request/rely/complete', { taskId, result });
+
+  createTask: function(taskData) {
+    return axiosClient.post('/task/', taskData);
+  },
+
+  updateTask: function(taskId, taskData) {
+    return axiosClient.put('/task/' + taskId, taskData);
+  },
+
+  deleteTask: function(taskId) {
+    return axiosClient.delete('/task/' + taskId);
+  },
+
+  startTask: function(taskId) {
+    return axiosClient.post('/request/rely/start', { taskId: taskId });
+  },
+
+  completeTask: function(taskId, result) {
+    return axiosClient.post('/request/rely/complete', { taskId: taskId, result: result });
+  },
+
+  approveTask: function(taskId) {
+    return axiosClient.post('/request/rely/approved', { taskId: taskId });
+  },
+
+  rejectTask: function(taskId) {
+    return axiosClient.post('/request/rely/rejected', { taskId: taskId });
   }
 };
 

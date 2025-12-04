@@ -1,10 +1,8 @@
-// src/pages/Login/index.js
 import React from 'react';
-import useLogin from './useLogin'; // We import our logic
-import './Login.css';             // We import our styles
+import useLogin from './useLogin';
+import './Login.css';
 
-const LoginPage = () => {
-  // Get the data and functions from our logic hook
+function LoginPage() {
   const {
     username,
     setUsername,
@@ -16,10 +14,11 @@ const LoginPage = () => {
 
   return (
     <div className="login-container">
-      <h2 className="login-header">Task Manager Login</h2>
-
-      {/* Only show error if one exists */}
-      {error && <div className="error-msg">{error}</div>}
+      <h2 className="login-header">Login</h2>
+      
+      {error && (
+        <div className="error-msg">{error}</div>
+      )}
 
       <form onSubmit={handleLogin}>
         <div className="form-group">
@@ -52,6 +51,6 @@ const LoginPage = () => {
       </form>
     </div>
   );
-};
+}
 
 export default LoginPage;

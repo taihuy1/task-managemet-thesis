@@ -1,21 +1,23 @@
 import axios from 'axios';
 
+// create axios instance for API calls
 const axiosClient = axios.create({
     baseURL: 'http://localhost:3001',
-    withCredentials : true, 
+    withCredentials: true,
     headers: {
-        'Content-Type': 'application/json',
-    },
-    
+        'Content-Type': 'application/json'
+    }
 });
 
-axiosClient.interceptors.response.use((congfig) => {    
+// add token to request header
+axiosClient.interceptors.request.use((config) => {
     const token = localStorage.getItem('accessToken');
     if (token) {
-        congfig.headers['Authorization'] = `Bearer ${token}`;
-
+        config.headers['Authorization'] = 'Bearer ' + token;
     }
-    return congfig;
+    return config;
+}, (error) => {
+    return Promise.reject(error);
 });
 
 export default axiosClient;

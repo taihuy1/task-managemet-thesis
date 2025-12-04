@@ -7,95 +7,85 @@ require('dotenv').config();
 const app = express();
 const PORT = 3001;
 
-
 let db;
 
-
-app.use(express.json()); 
+// middleware
+app.use(express.json());
 app.use(cors({
-    origin: 'http://localhost:3000', // Allow our React app
-    credentials: true                // Allow cookies/tokens
+    origin: 'http://localhost:3000',
+    credentials: true
 }));
 
-
+// logging middleware
 app.use((req, res, next) => {
-    console.log(`[Request] ${req.method} ${req.url}`);
+    console.log(`${req.method} ${req.url}`);
     next();
 });
 
-
-
-// Login Route
+// login endpoint
 app.post('/auth/login', async (req, res) => {
     try {
-        const { username, password } = req.body;
+        const username = req.body.username;
+        const password = req.body.password;
 
-        // Basic validation
         if (!username || !password) {
             return res.status(400).json({ message: 'Missing username or password' });
         }
 
-        // Check if DB is ready
         if (!db) {
             return res.status(500).json({ message: 'Database not connected' });
         }
 
-        // Find the user in SQL
+        // find user
         const result = await db.request()
             .input('username', sql.NVarChar, username)
             .query('SELECT * FROM Users WHERE Username = @username');
 
         const user = result.recordset[0];
 
-        // Validate user and password
         if (!user) {
             return res.status(401).json({ message: 'User not found' });
         }
 
-        // TODO: Switch to bcrypt.compare() before final submission
-        if (password !== user.Password) { 
+        // check password (TODO: use bcrypt later)
+        if (password !== user.Password) {
             return res.status(401).json({ message: 'Invalid password' });
         }
 
-        // Generate the token
-        const accessToken = jwt.sign(
-            { id: user.UserID, role: user.UserRole }, 
-            'your_secret_key', 
-            { expiresIn: '1h' } 
+        // create token
+        const token = jwt.sign(
+            { id: user.UserID, role: user.UserRole },
+            'your_secret_key',
+            { expiresIn: '1h' }
         );
 
-        console.log(`User ${username} logged in successfully.`);
+        console.log('Login successful for:', username);
 
-        // Send back the data
-        res.json({ 
-            accessToken, 
-            user: { 
-                id: user.UserID, 
-                username: user.Username, 
-                role: user.UserRole 
+        res.json({
+            accessToken: token,
+            user: {
+                id: user.UserID,
+                username: user.Username,
+                role: user.UserRole
             }
         });
 
-    } catch (err) {
-        console.error("Login Error:", err);
-        res.status(500).send('Server Error');
+    } catch (error) {
+        console.error('Login error:', error);
+        res.status(500).json({ message: 'Server error' });
     }
 });
 
-
-
-// Connect to DB first, then start the server
-console.log("Initializing server...");
+// connect database and start server
+console.log('Starting server...');
 
 connectDB()
     .then((pool) => {
-        db = pool; // Save the connection globally
-        
+        db = pool;
         app.listen(PORT, () => {
-            console.log(`Server is running on http://localhost:${PORT}`);
+            console.log(`Server running on http://localhost:${PORT}`);
         });
     })
     .catch((err) => {
-        console.error("Failed to connect to the database.");
-        console.error(err);
+        console.error('Database connection failed:', err);
     });

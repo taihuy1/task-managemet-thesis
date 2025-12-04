@@ -1,44 +1,44 @@
-// src/pages/Login/useLogin.js
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import taskService from '../../api/taskService';
 
-// This function handles all the state and API calls
-const useLogin = () => {
+// custom hook for login page
+function useLogin() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
-
+  
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {
-    e.preventDefault(); // Stop page refresh
-    setError(''); // Clear old errors
+    e.preventDefault();
+    setError('');
 
     try {
-      // Call the API
       const response = await taskService.login(username, password);
-
-      // 1. Get the token
-      const token = response.data.accessToken || response.data.token;
-
-      // 2. Save essential data to browser storage
-      localStorage.setItem('accessToken', token);
-
-      if (response.data.user) {
-        localStorage.setItem('userRole', response.data.user.role);
+      
+      // save token
+      const token = response.data.accessToken;
+      if (token) {
+        localStorage.setItem('accessToken', token);
       }
 
-      // 3. Redirect to dashboard
-      navigate('/dashboard');
+      // save user info
+      if (response.data.user) {
+        localStorage.setItem('userRole', response.data.user.role);
+        localStorage.setItem('userId', response.data.user.id);
+        localStorage.setItem('username', response.data.user.username);
+      }
 
+      // go to dashboard
+      navigate('/dashboard');
+      
     } catch (err) {
-      console.error("Login error:", err);
+      console.log('Login failed:', err);
       setError('Login failed. Please check your username/password.');
     }
   };
 
-  // Return the variables the HTML needs
   return {
     username,
     setUsername,
@@ -47,6 +47,6 @@ const useLogin = () => {
     error,
     handleLogin
   };
-};
+}
 
 export default useLogin;
