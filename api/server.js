@@ -7,23 +7,23 @@ require('dotenv').config();
 const app = express();
 const PORT = 3001;
 
-// This variable will hold our database connection
+
 let db;
 
-// 1. Middleware Configuration
-app.use(express.json()); // Allows us to read JSON from the frontend
+
+app.use(express.json()); 
 app.use(cors({
     origin: 'http://localhost:3000', // Allow our React app
     credentials: true                // Allow cookies/tokens
 }));
 
-// 2. Simple request logger (Good for debugging)
+
 app.use((req, res, next) => {
     console.log(`[Request] ${req.method} ${req.url}`);
     next();
 });
 
-// ---------------- ROUTES ----------------
+
 
 // Login Route
 app.post('/auth/login', async (req, res) => {
@@ -82,7 +82,7 @@ app.post('/auth/login', async (req, res) => {
     }
 });
 
-// ---------------- STARTUP ----------------
+
 
 // Connect to DB first, then start the server
 console.log("Initializing server...");
