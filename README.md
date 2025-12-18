@@ -86,6 +86,3 @@ Use the Refresh button to update tasks and notifications in both windows.
 - Check SQL Server is running
 - Verify username/password in `.env` file
 - Make sure database name is `TaskManagerDB`
-
-
-
