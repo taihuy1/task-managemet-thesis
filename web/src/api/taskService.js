@@ -41,8 +41,24 @@ const taskService = {
     return axiosClient.post('/request/rely/approved', { taskId: taskId });
   },
 
-  rejectTask: function(taskId) {
-    return axiosClient.post('/request/rely/rejected', { taskId: taskId });
+  rejectTask: function(taskId, reason) {
+    return axiosClient.post('/request/rely/rejected', { taskId: taskId, reason: reason });
+  },
+
+  getNotifications: function() {
+    return axiosClient.get('/notifications');
+  },
+
+  markNotificationRead: function(notifId) {
+    return axiosClient.put('/notifications/' + notifId + '/read');
+  },
+
+  getSolvers: function() {
+    return axiosClient.get('/users/solvers');
+  },
+
+  assignTask: function(taskId, solverId) {
+    return axiosClient.post('/request/send', { taskId: taskId, solvers: [solverId] });
   }
 };
 
