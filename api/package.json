@@ -1,9 +1,20 @@
 {
+  "name": "task-management-api",
+  "version": "1.0.0",
+  "description": "Task Management System API",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "keywords": ["task-management", "api"],
+  "author": "",
+  "license": "ISC",
   "dependencies": {
     "cors": "^2.8.5",
     "dotenv": "^17.2.3",
     "express": "^5.2.1",
+    "jsonwebtoken": "^9.0.2",
     "mssql": "^12.2.0"
   }
-
 }

@@ -1,88 +1,72 @@
 # Task Management System
 
-Hi professor, this is my thesis project. The database is not included in the GitHub repository, so you need to set it up on your computer first.
+Thesis project - Task management system with author and solver roles.
 
-## Setup Database
+## How to Run and Test
 
-1. Open SQL Server Management Studio (SSMS)
+### Step 1: Database Setup
 
-2. Connect to your SQL Server
+Run the SQL script `database/setup.sql` in SQL Server Management Studio. This creates the database and sample data.
 
-3. Create the database:
-   ```sql
-   CREATE DATABASE TaskManagerDB;
-   GO
-   ```
+### Step 2: Backend Setup
 
-4. Run the `database/setup.sql` file to create tables
+Create a file `api/.env` with your database credentials:
 
-5. (Optional) Run `database/Data.sql` for test data
-
-## Configure Backend
-
-1. In the `api` folder, create a file named `.env`
-
-2. Add this to `.env`:
-   ```
-   DB_SERVER=localhost
-   DB_PORT=1433
-   DB_USER=sa
-   DB_PASS=your_sql_password
-   DB_NAME=TaskManagerDB
-   ```
-   
-   Replace `your_sql_password` with your actual SQL Server password.
-
-## Install and Run
-
-**Backend:**
 ```
+DB_SERVER=localhost
+DB_PORT=1433
+DB_USER=sa
+DB_PASS=your_password_here
+DB_NAME=TaskManagerDB
+PORT=3001
+JWT_SECRET=any_random_string
+CORS_ORIGIN=http://localhost:3000
+```
+
+Then install and run:
+```bash
 cd api
 npm install
-npm install jsonwebtoken
-node server.js
+npm start
 ```
 
-**Frontend (new terminal):**
-```
+You should see: "Server running on port 3001" and "Database connected"
+
+### Step 3: Frontend Setup
+
+Open a new terminal and run:
+```bash
 cd web
 npm install
 npm start
 ```
 
-Then open browser to `http://localhost:3000`
+This opens the browser at `http://localhost:3000`
 
-## Test Login
+### Step 4: Test the Application
 
-**Authors:**
-- Username: `prof_vondrak`, Password: `123` (Ivo Vondrak)
-- Username: `manager_smith`, Password: `123` (John Smith)
+**Login with test accounts:**
 
-**Solvers:**
-- Username: `student_tai`, Password: `123` (Huy Tai Le)
-- Username: `student_anna`, Password: `123` (Anna Novak)
-- Username: `student_pavel`, Password: `123` (Pavel Svoboda)
-- Username: `student_lucie`, Password: `123` (Lucie Dvorak)
+Author accounts (can create and manage tasks):
+- Username: `prof_vondrak` / Password: `123`
+- Username: `manager_smith` / Password: `123`
 
-## Testing Side-by-Side Sessions
+Solver accounts (can work on assigned tasks):
+- Username: `student_tai` / Password: `123`
+- Username: `student_anna` / Password: `123`
+- Username: `student_pavel` / Password: `123`
+- Username: `student_lucie` / Password: `123`
 
-To test notifications and interactions between authors and solvers:
+**Testing workflow:**
+1. Login as an author (e.g., `prof_vondrak`)
+2. Create a new task and assign it to a solver
+3. Logout and login as the assigned solver
+4. Start the task, then mark it as completed
+5. Logout and login back as the author
+6. Approve or reject the completed task
 
-1. Open two browser windows (or use incognito mode for one)
-2. In first window: Login as an author (e.g., `prof_vondrak`)
-3. In second window: Login as a solver (e.g., `student_tai`)
-4. Arrange windows side by side
+All actions (GET, POST, PUT, DELETE) should work correctly now.
 
-**Test Scenarios:**
-- Author creates a task → Solver should see it after clicking Refresh
-- Author assigns task to solver → Solver gets notification
-- Solver starts/completes task → Author sees status update after refresh
-- Author approves/rejects task → Solver gets notification
 
-Use the Refresh button to update tasks and notifications in both windows.
 
-## If Database Connection Fails
 
-- Check SQL Server is running
-- Verify username/password in `.env` file
-- Make sure database name is `TaskManagerDB`

@@ -1,5 +1,7 @@
 import axiosClient from './axiosClient';
 
+// Centralized API service layer
+// Benefits: Single source of truth for API endpoints, easier to maintain and test
 const taskService = {
   login: function(username, password) {
     return axiosClient.post('/auth/login', { username, password });
@@ -14,7 +16,7 @@ const taskService = {
   },
 
   getTaskById: function(taskId) {
-    return axiosClient.get('/task/' + taskId);
+    return axiosClient.get(`/task/${taskId}`);
   },
 
   createTask: function(taskData) {
@@ -22,27 +24,27 @@ const taskService = {
   },
 
   updateTask: function(taskId, taskData) {
-    return axiosClient.put('/task/' + taskId, taskData);
+    return axiosClient.put(`/task/${taskId}`, taskData);
   },
 
   deleteTask: function(taskId) {
-    return axiosClient.delete('/task/' + taskId);
+    return axiosClient.delete(`/task/${taskId}`);
   },
 
   startTask: function(taskId) {
-    return axiosClient.post('/request/rely/start', { taskId: taskId });
+    return axiosClient.post('/request/rely/start', { taskId });
   },
 
   completeTask: function(taskId, result) {
-    return axiosClient.post('/request/rely/complete', { taskId: taskId, result: result });
+    return axiosClient.post('/request/rely/complete', { taskId, result });
   },
 
   approveTask: function(taskId) {
-    return axiosClient.post('/request/rely/approved', { taskId: taskId });
+    return axiosClient.post('/request/rely/approved', { taskId });
   },
 
   rejectTask: function(taskId, reason) {
-    return axiosClient.post('/request/rely/rejected', { taskId: taskId, reason: reason });
+    return axiosClient.post('/request/rely/rejected', { taskId, reason });
   },
 
   getNotifications: function() {
@@ -50,7 +52,7 @@ const taskService = {
   },
 
   markNotificationRead: function(notifId) {
-    return axiosClient.put('/notifications/' + notifId + '/read');
+    return axiosClient.put(`/notifications/${notifId}/read`);
   },
 
   getSolvers: function() {
@@ -58,7 +60,7 @@ const taskService = {
   },
 
   assignTask: function(taskId, solverId) {
-    return axiosClient.post('/request/send', { taskId: taskId, solvers: [solverId] });
+    return axiosClient.post('/request/send', { taskId, solvers: [solverId] });
   }
 };
 

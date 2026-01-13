@@ -2,6 +2,8 @@ import React from 'react';
 import useLogin from './useLogin';
 import './Login.css';
 
+// Login page component
+// Uses custom hook (useLogin) to separate business logic from presentation
 function LoginPage() {
   const {
     username,
@@ -9,6 +11,7 @@ function LoginPage() {
     password,
     setPassword,
     error,
+    loading,
     handleLogin
   } = useLogin();
 
@@ -17,36 +20,48 @@ function LoginPage() {
       <h2 className="login-header">Login</h2>
       
       {error && (
-        <div className="error-msg">{error}</div>
+        <div className="error-msg" role="alert">
+          {error}
+        </div>
       )}
 
       <form onSubmit={handleLogin}>
         <div className="form-group">
-          <label>Username</label>
+          <label htmlFor="username">Username</label>
           <input
+            id="username"
             className="form-input"
             type="text"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
             placeholder="Enter username"
             required
+            disabled={loading}
+            autoComplete="username"
           />
         </div>
 
         <div className="form-group">
-          <label>Password</label>
+          <label htmlFor="password">Password</label>
           <input
+            id="password"
             className="form-input"
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             placeholder="Enter password"
             required
+            disabled={loading}
+            autoComplete="current-password"
           />
         </div>
 
-        <button type="submit" className="login-btn">
-          Sign In
+        <button 
+          type="submit" 
+          className="login-btn"
+          disabled={loading}
+        >
+          {loading ? 'Signing In...' : 'Sign In'}
         </button>
       </form>
     </div>
