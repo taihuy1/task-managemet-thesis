@@ -18,6 +18,8 @@ export const API_ENDPOINTS = {
         BASE: '/notifications',
         BY_ID: (id: string) => `/notifications/${id}`,
         MARK_READ: (id: string) => `/notifications/${id}/read`,
+        MARK_ALL_READ: '/notifications/read-all',
+        UNREAD_COUNT: '/notifications/unread-count',
     },
     USERS: {
         BASE: '/users',

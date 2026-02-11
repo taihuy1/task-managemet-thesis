@@ -1,30 +1,19 @@
 import { ApiError } from '@/types/api.types';
 import axios, { AxiosError } from 'axios';
 
-export function normalizeError(error: unknown): ApiError {
-    if (axios.isAxiosError(error)) {
-        const axiosError = error as AxiosError<any>;
+export function normalizeError(err: unknown): ApiError {
+    if (axios.isAxiosError(err)) {
+        const axErr = err as AxiosError<any>;
         return {
-            message: axiosError.response?.data?.message || axiosError.message,
-            status: axiosError.response?.status || 500,
-            code: axiosError.code,
-            errors: axiosError.response?.data?.errors,
+            message: axErr.response?.data?.message || axErr.message,
+            status: axErr.response?.status || 500,
+            code: axErr.code,
         };
     }
 
-    if (error instanceof Error) {
-        return {
-            message: error.message,
-            status: 500,
-        };
+    if (err instanceof Error) {
+        return { message: err.message, status: 500 };
     }
 
-    return {
-        message: 'An unknown error occurred',
-        status: 500,
-    };
-}
-
-export function isAuthError(error: ApiError): boolean {
-    return error.status === 401 || error.status === 403;
+    return { message: 'Something went wrong', status: 500 };
 }

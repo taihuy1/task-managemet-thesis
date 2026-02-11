@@ -20,26 +20,16 @@ export interface Task {
     priority: Priority;
     authorId: string;
     solverId?: string;
-    author: {
-        id: string;
-        name: string;
-        email: string;
-    };
-    solver?: {
-        id: string;
-        name: string;
-        email: string;
-    };
-    createdAt: string;
-    updatedAt: string;
+    startedAt?: string;
     completedAt?: string;
     approvedAt?: string;
+    rejectedAt?: string;
+    rejectionReason?: string;
+    dueDate?: string;
+    createdAt: string;
+    updatedAt: string;
 }
 
-/**
- * Payload for creating a new task
- * Backend expects: { title, desc, solvers: [solverId] }
- */
 export interface CreateTaskPayload {
     title: string;
     desc: string;

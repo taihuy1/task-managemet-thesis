@@ -13,7 +13,7 @@ interface AuthContextType {
     user: User | null;
     isAuthenticated: boolean;
     isLoading: boolean;
-    login: (credentials: LoginCredentials) => Promise<void>;
+    login: (credentials: LoginCredentials) => Promise<User>;
     logout: () => Promise<void>;
     error: string | null;
 }
@@ -27,14 +27,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     const isAuthenticated = !!user;
 
-    const login = async (credentials: LoginCredentials) => {
+    const login = async (credentials: LoginCredentials): Promise<User> => {
         try {
             setIsLoading(true);
             setError(null);
-            const { accessToken, user } = await authService.login(credentials);
+            const { accessToken, user: loggedInUser } = await authService.login(credentials);
             saveToken(accessToken);
-            saveUser(user);
-            setUser(user);
+            saveUser(loggedInUser);
+            setUser(loggedInUser);
+            return loggedInUser;
         } catch (err) {
             const apiError = normalizeError(err);
             setError(apiError.message);
