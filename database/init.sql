@@ -46,6 +46,8 @@ CREATE TABLE Notifications (
 );
 
 -- Insert sample users
+-- NOTE: Passwords are stored in plain text for development/testing purposes only
+-- In production, use bcrypt or another secure hashing algorithm
 INSERT INTO Users (Username, Password, FullName, UserRole) VALUES 
 ('prof_vondrak', '123', 'Ivo Vondrak', 'author'),
 ('manager_smith', '123', 'John Smith', 'author'),

@@ -17,7 +17,8 @@ This setup uses Docker to automatically start a SQL Server database, making it e
 # Start SQL Server in Docker (downloads and initializes automatically)
 docker compose up -d
 
-# Wait 30 seconds for database initialization to complete
+# Wait for database to be ready (about 40 seconds for initialization)
+# You can check status with: docker compose ps
 ```
 
 The database will be automatically created with sample data (6 users and 7 tasks).
@@ -71,7 +72,7 @@ All actions (GET, POST, PUT, DELETE) should work correctly now.
 
 If you prefer to use an existing SQL Server instance instead of Docker:
 
-1. Run the SQL script `database/setup.sql` in SQL Server Management Studio
+1. Run the SQL script `database/init.sql` in SQL Server Management Studio (or use the legacy `database/setup.sql`)
 2. Update `api/.env` with your database credentials:
    ```
    DB_SERVER=your_server
