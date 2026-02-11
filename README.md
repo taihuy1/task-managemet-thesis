@@ -6,7 +6,7 @@ A comprehensive task management system with roles for Authors (task creators) an
 
 - `api/` - Backend Node.js/Express API
 - `client/` - **NEW** Frontend React/TypeScript application (Vite)
-- `web/` - **LEGACY** Frontend React application (CRA) - *Deprecated*
+
 - `web-archive/` - Future location for archived legacy frontend
 
 ## Getting Started
@@ -35,10 +35,6 @@ npm install
 npm start
 ```
 
-## Migration Status
-
-The project is currently undergoing a migration from the legacy `web/` folder to the new `client/` folder.
-Please see [MIGRATION_PLAN.md](./MIGRATION_PLAN.md) for details.
 
 ## Development
 

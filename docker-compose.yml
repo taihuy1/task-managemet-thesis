@@ -43,12 +43,12 @@ services:
       - app-network
     restart: unless-stopped
 
-  # Frontend Web Service
-  web:
+  # Frontend Client Service
+  client:
     build:
-      context: ./web
+      context: ./client
       dockerfile: Dockerfile
-    container_name: task-manager-web
+    container_name: task-manager-client
     ports:
       - "80:80"
     depends_on:

@@ -46,19 +46,19 @@ services:
     networks:
       - app-network
 
-  # Frontend Web Service (Dev)
-  web:
+  # Frontend Client Service (Dev)
+  client:
     image: node:18-alpine
-    container_name: task-manager-web-dev
+    container_name: task-manager-client-dev
     working_dir: /app
-    command: npm start
+    command: npm run dev
     volumes:
-      - ./web:/app
+      - ./client:/app
       - /app/node_modules
     ports:
-      - "3000:3000"
+      - "5173:5173"
     environment:
-      REACT_APP_API_URL: http://localhost:3001
+      VITE_API_BASE_URL: http://localhost:3001
     depends_on:
       - api
     networks:

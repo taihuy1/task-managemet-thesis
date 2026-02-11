@@ -64,6 +64,7 @@ const createTask = async (taskData, authorId) => {
     await notificationRepository.create({
         userId: solverId,
         taskId: task.id,
+        type: NOTIFICATION_TYPES.TASK_ASSIGNED,
         message: `You have been assigned a new task: ${title}`
     });
 
@@ -162,6 +163,7 @@ const completeTask = async (taskId, solverId) => {
     await notificationRepository.create({
         userId: task.authorId,
         taskId: task.id,
+        type: NOTIFICATION_TYPES.TASK_COMPLETED,
         message: `Task "${task.title}" has been completed and awaits your approval`
     });
 
@@ -197,6 +199,7 @@ const approveTask = async (taskId, authorId) => {
     await notificationRepository.create({
         userId: task.solverId,
         taskId: task.id,
+        type: NOTIFICATION_TYPES.TASK_APPROVED,
         message: `Your task "${task.title}" has been approved!`
     });
 
@@ -239,6 +242,7 @@ const rejectTask = async (taskId, authorId, reason = null) => {
     await notificationRepository.create({
         userId: task.solverId,
         taskId: task.id,
+        type: NOTIFICATION_TYPES.TASK_REJECTED,
         message
     });
 

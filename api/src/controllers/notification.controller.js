@@ -3,23 +3,19 @@
  * Handles HTTP requests for notification endpoints
  */
 const notificationService = require('../services/notification.service');
-const taskService = require('../services/task.service');
 const { successResponse } = require('../utils/response');
 
 /**
  * GET /notifications
  * Get notifications for the authenticated user
- * Note: Current implementation returns tasks (matching existing behavior)
  */
 const getNotifications = async (req, res, next) => {
     try {
-        const { id: userId, role } = req.user;
+        const userId = req.user.id;
 
-        // Current behavior returns tasks, not notifications
-        // This matches the existing implementation for backwards compatibility
-        const tasks = await taskService.getTasksByRole(userId, role);
+        const notifications = await notificationService.getNotifications(userId);
 
-        return successResponse(res, tasks, 'Notifications retrieved successfully');
+        return successResponse(res, notifications, 'Notifications retrieved successfully');
     } catch (error) {
         next(error);
     }
