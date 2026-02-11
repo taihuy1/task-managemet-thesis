@@ -2,28 +2,28 @@
 
 Thesis project - Task management system with author and solver roles.
 
-## How to Run and Test
+## Quick Start (Recommended)
 
-### Step 1: Database Setup
+This setup uses Docker to automatically start a SQL Server database, making it easy to run the application without manual database installation.
 
-Run the SQL script `database/setup.sql` in SQL Server Management Studio. This creates the database and sample data.
+### Prerequisites
+- Docker and Docker Compose installed
+- Node.js (v14 or higher)
+- npm
 
-### Step 2: Backend Setup
+### Step 1: Start the Database
 
-Create a file `api/.env` with your database credentials:
+```bash
+# Start SQL Server in Docker (downloads and initializes automatically)
+docker compose up -d
 
-```
-DB_SERVER=localhost
-DB_PORT=1433
-DB_USER=sa
-DB_PASS=your_password_here
-DB_NAME=TaskManagerDB
-PORT=3001
-JWT_SECRET=any_random_string
-CORS_ORIGIN=http://localhost:3000
+# Wait 30 seconds for database initialization to complete
 ```
 
-Then install and run:
+The database will be automatically created with sample data (6 users and 7 tasks).
+
+### Step 2: Start the Backend
+
 ```bash
 cd api
 npm install
@@ -32,16 +32,16 @@ npm start
 
 You should see: "Server running on port 3001" and "Database connected"
 
-### Step 3: Frontend Setup
+### Step 3: Start the Frontend
 
-Open a new terminal and run:
+Open a new terminal:
 ```bash
 cd web
 npm install
 npm start
 ```
 
-This opens the browser at `http://localhost:3000`
+The browser will automatically open at `http://localhost:3000`
 
 ### Step 4: Test the Application
 
@@ -66,6 +66,46 @@ Solver accounts (can work on assigned tasks):
 6. Approve or reject the completed task
 
 All actions (GET, POST, PUT, DELETE) should work correctly now.
+
+## Manual Database Setup (Alternative)
+
+If you prefer to use an existing SQL Server instance instead of Docker:
+
+1. Run the SQL script `database/setup.sql` in SQL Server Management Studio
+2. Update `api/.env` with your database credentials:
+   ```
+   DB_SERVER=your_server
+   DB_PORT=1433
+   DB_USER=your_username
+   DB_PASS=your_password
+   DB_NAME=TaskManagerDB
+   PORT=3001
+   JWT_SECRET=any_random_string
+   CORS_ORIGIN=http://localhost:3000
+   ```
+3. Follow steps 2-4 from Quick Start
+
+## Stopping the Application
+
+```bash
+# Stop the Docker database
+docker compose down
+
+# Remove database data (fresh start next time)
+docker compose down -v
+```
+
+## Troubleshooting
+
+**Network Error on Login:**
+- Ensure Docker container is running: `docker compose ps`
+- Check backend is connected to database in server logs
+- Verify backend is running on port 3001
+
+**Database Connection Failed:**
+- Wait 30-40 seconds after `docker compose up -d` for initialization
+- Check logs: `docker logs taskmanager-sqlserver`
+- Restart: `docker compose down -v && docker compose up -d`
 
 
 
