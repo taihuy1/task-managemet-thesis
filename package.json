@@ -1,0 +1,16 @@
+{
+    "name": "task-management-system",
+    "version": "1.0.0",
+    "private": true,
+    "scripts": {
+        "dev:old": "cd web && npm start",
+        "dev:new": "cd client && npm run dev",
+        "dev:both": "concurrently \"npm run dev:old\" \"npm run dev:new\"",
+        "build:old": "cd web && npm run build",
+        "build:new": "cd client && npm run build",
+        "test:new": "cd client && npm test"
+    },
+    "devDependencies": {
+        "concurrently": "^8.2.2"
+    }
+}

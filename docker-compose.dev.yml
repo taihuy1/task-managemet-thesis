@@ -1,0 +1,72 @@
+version: '3.8'
+
+services:
+  # Database Service
+  db:
+    image: postgres:15-alpine
+    container_name: task-manager-db-dev
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: taskmanager
+    volumes:
+      - postgres_data_dev:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    networks:
+      - app-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Backend API Service (Dev)
+  api:
+    build: 
+      context: ./api
+      dockerfile: Dockerfile
+      target: builder # Use builder stage to have dev tools
+    container_name: task-manager-api-dev
+    command: npm run dev
+    volumes:
+      - ./api:/app
+      - /app/node_modules
+    environment:
+      NODE_ENV: development
+      PORT: 3001
+      DATABASE_URL: postgres://postgres:password@db:5432/taskmanager
+      JWT_SECRET: dev_secret_key
+      CORS_ORIGIN: http://localhost:3000
+    ports:
+      - "3001:3001"
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - app-network
+
+  # Frontend Web Service (Dev)
+  web:
+    image: node:18-alpine
+    container_name: task-manager-web-dev
+    working_dir: /app
+    command: npm start
+    volumes:
+      - ./web:/app
+      - /app/node_modules
+    ports:
+      - "3000:3000"
+    environment:
+      REACT_APP_API_URL: http://localhost:3001
+    depends_on:
+      - api
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  postgres_data_dev:

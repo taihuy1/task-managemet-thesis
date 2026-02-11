@@ -1,0 +1,105 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum Role {
+  AUTHOR
+  SOLVER
+}
+
+enum TaskStatus {
+  PENDING
+  STARTED
+  COMPLETED
+  APPROVED
+  REJECTED
+}
+
+enum Priority {
+  LOW
+  MEDIUM
+  HIGH
+}
+
+enum NotificationType {
+  TASK_ASSIGNED
+  TASK_APPROVED
+  TASK_REJECTED
+  TASK_STARTED
+  TASK_COMPLETED
+}
+
+model User {
+  id           String  @id @default(uuid())
+  email        String  @unique
+  name         String
+  password     String
+  role         Role    @default(SOLVER)
+  refreshToken String?
+
+  // Relations
+  createdTasks  Task[]         @relation("AuthorTasks")
+  assignedTasks Task[]         @relation("SolverTasks")
+  notifications Notification[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([email])
+  @@map("users")
+}
+
+model Task {
+  id          String     @id @default(uuid())
+  title       String
+  description String?
+  status      TaskStatus @default(PENDING)
+  priority    Priority   @default(MEDIUM)
+
+  // Foreign keys
+  authorId String
+  author   User   @relation("AuthorTasks", fields: [authorId], references: [id], onDelete: Cascade)
+
+  solverId String?
+  solver   User?   @relation("SolverTasks", fields: [solverId], references: [id], onDelete: SetNull)
+
+  // Audit trail
+  startedAt       DateTime?
+  completedAt     DateTime?
+  approvedAt      DateTime?
+  rejectedAt      DateTime?
+  rejectionReason String?
+
+  dueDate   DateTime?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  // Relations
+  notifications Notification[]
+
+  @@index([authorId])
+  @@index([solverId])
+  @@index([status])
+  @@map("tasks")
+}
+
+model Notification {
+  id        String            @id @default(uuid())
+  message   String
+  isRead    Boolean           @default(false)
+  type      NotificationType?
+  createdAt DateTime          @default(now())
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  taskId String?
+  task   Task?   @relation(fields: [taskId], references: [id], onDelete: SetNull)
+
+  @@index([userId, isRead])
+  @@map("notifications")
+}
