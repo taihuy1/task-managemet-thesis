@@ -31,11 +31,12 @@ const findById = async (taskId) => {
  * Find tasks by role-based filter
  * Authors see tasks they created, Solvers see tasks assigned to them
  * @param {number} userId - User ID
- * @param {string} role - User role ('author' or 'solver')
+ * @param {string} role - User role ('AUTHOR' or 'SOLVER')
  * @returns {Promise<Task[]>} List of tasks
  */
 const findByRole = async (userId, role) => {
-    const whereClause = role === 'author'
+    const normalizedRole = role.toUpperCase();
+    const whereClause = normalizedRole === 'AUTHOR'
         ? { authorId: userId }
         : { solverId: userId };
 

@@ -8,6 +8,7 @@ const router = express.Router();
 const { taskController } = require('../controllers');
 const { authenticateToken, authorizeRole, requireDatabase, validateRequest, validateParams } = require('../middleware');
 const { createTaskSchema, updateTaskSchema, rejectTaskSchema, idSchema } = require('../validators');
+const { ROLES } = require('../utils/constants');
 
 // GET /task - Get all tasks for user
 router.get('/',
@@ -27,7 +28,7 @@ router.get('/:id',
 // POST /task - Create new task (Author only)
 router.post('/',
     authenticateToken,
-    authorizeRole('author'),
+    authorizeRole(ROLES.AUTHOR),
     requireDatabase,
     validateRequest(createTaskSchema),
     taskController.createTask
@@ -45,7 +46,7 @@ router.put('/:id',
 // PATCH /task/:id/start - Start task (Solver only)
 router.patch('/:id/start',
     authenticateToken,
-    authorizeRole('solver'),
+    authorizeRole(ROLES.SOLVER),
     requireDatabase,
     validateParams(idSchema),
     taskController.startTask
@@ -54,7 +55,7 @@ router.patch('/:id/start',
 // PATCH /task/:id/complete - Complete task (Solver only)
 router.patch('/:id/complete',
     authenticateToken,
-    authorizeRole('solver'),
+    authorizeRole(ROLES.SOLVER),
     requireDatabase,
     validateParams(idSchema),
     taskController.completeTask
@@ -63,7 +64,7 @@ router.patch('/:id/complete',
 // PATCH /task/:id/approve - Approve task (Author only)
 router.patch('/:id/approve',
     authenticateToken,
-    authorizeRole('author'),
+    authorizeRole(ROLES.AUTHOR),
     requireDatabase,
     validateParams(idSchema),
     taskController.approveTask
@@ -72,9 +73,8 @@ router.patch('/:id/approve',
 // PATCH /task/:id/reject - Reject task (Author only)
 router.patch('/:id/reject',
     authenticateToken,
-    authorizeRole('author'),
+    authorizeRole(ROLES.AUTHOR),
     requireDatabase,
-    validateParams(idSchema),
     validateParams(idSchema),
     validateRequest(rejectTaskSchema),
     taskController.rejectTask
@@ -83,7 +83,7 @@ router.patch('/:id/reject',
 // DELETE /task/:id - Delete task (Author only)
 router.delete('/:id',
     authenticateToken,
-    authorizeRole('author'),
+    authorizeRole(ROLES.AUTHOR),
     requireDatabase,
     validateParams(idSchema),
     taskController.deleteTask
