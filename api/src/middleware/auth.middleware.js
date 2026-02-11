@@ -6,11 +6,13 @@ const jwt = require('jsonwebtoken');
 const { JWT_SECRET } = require('../config/auth.config');
 const { errorResponse } = require('../utils/response');
 const logger = require('../utils/logger');
+const userRepository = require('../repositories/user.repository');
 
 /**
  * Verify JWT token and attach user to request
+ * Also validates that the user still exists in the database
  */
-const authenticateToken = (req, res, next) => {
+const authenticateToken = async (req, res, next) => {
     try {
         const authHeader = req.headers.authorization;
 
@@ -21,6 +23,12 @@ const authenticateToken = (req, res, next) => {
         const token = authHeader.substring(7); // Remove "Bearer "
 
         const decoded = jwt.verify(token, JWT_SECRET);
+
+        // Verify user still exists in database
+        const user = await userRepository.findById(decoded.id);
+        if (!user) {
+            return errorResponse(res, 'User account not found. Please login again', 401);
+        }
 
         // Attach user to request
         req.user = decoded;

@@ -30,10 +30,10 @@ const createTaskSchema = Joi.object({
 
     solvers: Joi.array()
         .items(Joi.string().uuid())
-        .min(1)
+        .length(1)
         .required()
         .messages({
-            'array.min': 'Task must be assigned to at least one solver',
+            'array.length': 'Task must be assigned to exactly one solver',
             'string.guid': 'Solver ID must be a valid UUID',
             'any.required': 'Solvers array is required'
         })

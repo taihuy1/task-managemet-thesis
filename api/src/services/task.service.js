@@ -43,7 +43,7 @@ const getTaskById = async (taskId) => {
  */
 const createTask = async (taskData, authorId) => {
     const { title, desc, solvers } = taskData;
-    const solverId = solvers[0]; // Currently supporting single solver
+    const [solverId] = solvers; // Validator ensures exactly 1 solver
 
     // Verify solver exists and has solver role
     const solver = await userRepository.findById(solverId);
@@ -180,13 +180,9 @@ const completeTask = async (taskId, solverId) => {
  * @returns {Promise<Task>} Updated task
  */
 const approveTask = async (taskId, authorId) => {
-    const task = await taskRepository.findById(taskId);
+    const task = await taskRepository.findByIdAndAuthor(taskId, authorId);
     if (!task) {
-        throw new NotFoundError('Task');
-    }
-
-    if (task.authorId !== authorId) {
-        throw new AuthorizationError('Only the task author can approve this task');
+        throw new NotFoundError('Task not found or access denied');
     }
 
     if (task.status !== TASK_STATUS.COMPLETED) {
@@ -217,13 +213,9 @@ const approveTask = async (taskId, authorId) => {
  * @returns {Promise<Task>} Updated task
  */
 const rejectTask = async (taskId, authorId, reason = null) => {
-    const task = await taskRepository.findById(taskId);
+    const task = await taskRepository.findByIdAndAuthor(taskId, authorId);
     if (!task) {
-        throw new NotFoundError('Task');
-    }
-
-    if (task.authorId !== authorId) {
-        throw new AuthorizationError('Only the task author can reject this task');
+        throw new NotFoundError('Task not found or access denied');
     }
 
     if (task.status !== TASK_STATUS.COMPLETED) {

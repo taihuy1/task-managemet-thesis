@@ -7,8 +7,6 @@ A comprehensive task management system with roles for Authors (task creators) an
 - `api/` - Backend Node.js/Express API
 - `client/` - **NEW** Frontend React/TypeScript application (Vite)
 
-- `web-archive/` - Future location for archived legacy frontend
-
 ## Getting Started
 
 ### Backend (API)
